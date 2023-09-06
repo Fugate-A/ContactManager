@@ -12,11 +12,11 @@
     }else{
 
         $stmt = $conn->prepare("INSERT into Users (FirstName, LastName, Login, Password) VALUES (?,?,?,?)");
-        $stmt->bind_param("ss", $firstName, $lastName, $login, $password);
+        $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
         $stmt->execute();
         $stmt->close();
         $conn->close();
-        returnWithError("");
+        returnWithError("User Added!");
     }
 
     function getRequestInfo()

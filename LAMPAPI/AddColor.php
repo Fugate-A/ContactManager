@@ -16,7 +16,7 @@
 		$stmt->execute();
 		$stmt->close();
 		$conn->close();
-		returnWithError("");
+		returnWithError("Color Added!");
 	}
 
 	function getRequestInfo()
