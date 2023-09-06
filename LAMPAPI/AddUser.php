@@ -1,16 +1,18 @@
 <?php
     $inData = getRequestInfo();
 
-    $username = $inData["username"];
+    $firstName = $inData["firstName"];
+    $lastName = $inData["lastName"];
+    $login = $inData["login"];
     $password = $inData["password"];
 
-    $conn = new mysqli("localhost", "root", "SmallGroupProjectCOP4331C", "COP4331");
+    $conn = new mysqli("localhost", "TheBeast", "SmallGroupProjectCOP4331C", "COP4331");
     if ($conn->connect_error){
         returnWithError($conn->connect_error);
     }else{
 
-        $stmt = $conn->prepare("INSERT into Users (Name, Password) VALUES (?,?)");
-        $stmt->bind_param("ss", $username, $password);
+        $stmt = $conn->prepare("INSERT into Users (FirstName, LastName, Login, Password) VALUES (?,?,?,?)");
+        $stmt->bind_param("ss", $firstName, $lastName, $login, $password);
         $stmt->execute();
         $stmt->close();
         $conn->close();

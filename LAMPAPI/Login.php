@@ -1,4 +1,3 @@
-
 <?php
 
 	$inData = getRequestInfo();
@@ -7,7 +6,7 @@
 	$firstName = "";
 	$lastName = "";
 
-	$conn = new mysqli("localhost", "root", "SmallGroupProjectCOP4331C", "COP4331");
+	$conn = new mysqli("localhost", "TheBeast", "SmallGroupProjectCOP4331C", "COP4331");
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );
