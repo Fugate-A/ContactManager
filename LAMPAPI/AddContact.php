@@ -4,17 +4,19 @@
     $firstName = $inData["firstName"];
     $lastName = $inData["lastName"];
     $phoneNumber = $inData["phoneNumber"];
+    $email = $inData["email"];
+    $userID = $inData["userID"];
 
     $conn = new mysqli("localhost", "root", "SmallGroupProjectCOP4331C", "COP4331");
     if($conn->connect_error){
         returnWithError($conn->connect_error);
     }else{
-        $stmt = $conn->prepare("INSERT into Contacts (Firstname, Lastname, Phonenumber) values(?,?,?)");
-        $stmt->bind_param("sss", $firstName, $lastName, $phoneNumber);
+        $stmt = $conn->prepare("INSERT into Contacts (Firstname, Lastname, Phone, Email, UserID) values(?,?,?,?,?)");
+        $stmt->bind_param("sssss", $firstName, $lastName, $phoneNumber, $emial, $userID);
         $stmt->execute();
         $stmt->close();
         $conn->close();
-        returnWithError("");
+        returnWithError("Contact added!");
     }
 
     function getRequestInfo()
