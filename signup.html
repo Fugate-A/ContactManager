@@ -11,11 +11,14 @@
 <h1 id="title">The Bean Book</h1>
 
 <div id="loginDiv">
-	<span id="inner-title">Login to your Bean Book</span>
+	<span id="inner-title">Signup For Bean Book</span>
 	<input type="text" id="loginName" placeholder="Username" /><br />
 	<input type="password" id="loginPassword" placeholder="Password"/><br />
-	<button type="button" id="loginButton" class="buttons" onclick="doLogin();">Login</button>
-	<button type="button" id="signupButton" class="buttons" onclick="window.location.assign('signup.html');">Signup</button>
+    <input type="text" id="firstName" placeholder="First Name" /><br />
+    <input type="text" id="lastName" placeholder="Last Name" /><br />
+	<button type="button" id="loginButton" class="buttons" onclick="doSignup();">Signup</button>
+	<a href="index.html"><button type="button" class="buttons">Go Login</button></a>
+
 	<span id="loginResult"></span>
 </div>
 
