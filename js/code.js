@@ -15,14 +15,6 @@ function doLogin()
 	let password = document.getElementById("loginPassword").value;
 //	var hash = md5( password );
 	
-	document.getElementById("loginResult").innerHTML = "";
-
-	if(login == "art" && password == "art"){
-		window.location.href = "book.html";
-
-		return;
-	}
-
 	let tmp = {login:login,password:password};
 //	var tmp = {login:login,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
@@ -73,40 +65,39 @@ function saveCookie()
 	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
 }
 
-function doSignup()
-{
-	let firstName = document.getElementById("firstName").value;
-	let lastName = document.getElementById("lastName").value;
-	let login = document.getElementById("loginName").value;
-	let password = document.getElementById("loginPassword").value;
+function doSignup() {
+    let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value;
+    let login = document.getElementById("loginName").value;
+    let password = document.getElementById("loginPassword").value;
 
-	let tmp = {firstName:firstName,lastName:lastName, login:login,password:password};
-	let jsonPayload = JSON.stringify(tmp);
-	let url = urlBase + '/AddUser.' + extension;
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST",url,true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange=function()
-		{
-			if(this.readyState==4&&this.status==200)
-			{
-				document.getElementById("loginResult").innerHTML = "User Created";
-			}
-		}
-		xhr.send(jsonPayload);
-		//document.getElementByID("loginResult")
-	}
-	catch(err)
-	{
-		document.getElementById("loginResult").innerHTML = err.message;
-	}
+    let tmp = { firstName: firstName, lastName: lastName, login: login, password: password };
+    let jsonPayload = JSON.stringify(tmp);
+    let url = urlBase + '/AddUser.' + extension;
 
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonPayload
+    })
+    .then(response => {
+        if (response.status === 200) {
+            // Redirect to index.html with a query parameter
+            window.location.href = "index.html?signup=true";
+        } else {
+            throw new Error('User creation failed');
+        }
+    })
+    .catch(error => {
+        document.getElementById("loginResult").innerHTML = error.message;
+    });
 }
 
-function readCookie()
-{
+
+
+function readCookie(){
 	userId = -1;
 	let data = document.cookie;
 	let splits = data.split(",");
