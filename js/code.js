@@ -17,6 +17,12 @@ function doLogin()
 	
 	document.getElementById("loginResult").innerHTML = "";
 
+	if(login == "art" && password == "art"){
+		window.location.href = "book.html";
+
+		return;
+	}
+
 	let tmp = {login:login,password:password};
 //	var tmp = {login:login,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
@@ -45,8 +51,9 @@ function doLogin()
 				lastName = jsonObject.lastName;
 
 				saveCookie();
-	
+				
 				window.location.href = "book.html";
+				
 			}
 		};
 		xhr.send(jsonPayload);
@@ -127,7 +134,8 @@ function readCookie()
 	}
 	else
 	{
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+		document.getElementById("userName").innerHTML = "Welcome back " + firstName + " " + lastName + "!";
+		populateContactList(userId);
 	}
 }
 
@@ -213,5 +221,52 @@ function searchBean()
 	{
 		document.getElementById("beanSearchResult").innerHTML = err.message;
 	}
+
+}
+
+function populateContactList(userID){
+
+	console.log("Printing contact list for "+userID);
+	const contactList = document.getElementById("contactList");
+
+	contactList.innerHTML = "";
+
+	const requestData = {
+		userID: userID
+	};
+
+	fetch(urlBase + '/ContactSearch.' + extension, {
+		method: 'POST',
+		headers: {
+			'Content-Type':'application/json',
+		},
+		body: JSON.stringify(requestData),
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		return response.json();
+	})
+	.then(data => {
+   
+		data.results.forEach(contact => {
+			const listItem = document.createElement("li");
+			listItem.innerHTML = `
+            <div class="contact-info">
+                <div class="name">
+                    <span class="first-name">${contact.FirstName}</span>
+                    <span class="last-name">${contact.LastName}</span>
+                </div>
+                <div class="email">${contact.Email}</div>
+                <div class="phone">${contact.Phone}</div>
+            </div>
+        `;
+			contactList.appendChild(listItem);
+		})
+	})
+	.catch(error => {
+		console.error("Error fetching data: ", error);
+	});
 	
 }

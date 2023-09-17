@@ -6,6 +6,23 @@ body
     background-position: center; /* Center the image */
     background-repeat: no-repeat; 
     background-size:auto;
+
+    text-align: center;
+
+   
+}
+
+.displayArea{
+    background-color: #765640;
+    width: 70%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: lime;
+
+    margin: 0 auto;
 }
 
 #title 
@@ -29,11 +46,43 @@ body
 
 #loggedInDiv
 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     font-size: 30px;
     width: 70%;
-    margin-left: 15%;
     padding: 25px;
-    background-color: #765640;
+
+    border: lime solid;
+}
+
+#contacts{
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#contactList{
+    list-style-position: inside;
+}
+
+#contactList li{
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.contact-info{
+    border: black solid;
+}
+
+#contactList li::before {
+    content: '\2022'; /* Unicode bullet character */
+    margin-right: 10px; /* Adjust the spacing between the bullet and text */
+    font-size: 18px; /* Adjust the bullet size as needed */
 }
 
 #accessUIDiv
@@ -61,7 +110,7 @@ body
    width:70%;
    padding:25px;
    font-family:'Bookman',sans-serif;
-   float:left:
+   float:left;
 }
 
 .switchButton:after
