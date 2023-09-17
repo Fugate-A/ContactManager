@@ -14,9 +14,15 @@
         $stmt = $conn->prepare("INSERT into Contacts (Firstname, Lastname, Phone, Email, UserID) values(?,?,?,?,?)");
         $stmt->bind_param("sssss", $firstName, $lastName, $phoneNumber, $email, $userID);
         $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            returnWithSuccess("Contact added!");
+        } else {
+            returnWithError("Contact could not be added.");
+        }
+
         $stmt->close();
         $conn->close();
-        returnWithError("Contact added!");
     }
 
     function getRequestInfo()
@@ -36,4 +42,9 @@
         sendResultInfoAsJson( $retValue );
     }
 
-    ?>
+    function returnWithSuccess($message){
+        $retValue = '{"success":true,"message":"' . $message . '"}';
+        sendResultInfoAsJson($retValue);
+    }
+
+?>

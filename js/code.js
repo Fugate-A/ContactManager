@@ -161,35 +161,67 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
-function addBean()
-{
-	let newBean = document.getElementById("beanText").value;
-	document.getElementById("beanAddResult").innerHTML = "";
+ // Function to clear the contact form fields
+function clearContactForm() {
+	const firstNameInput = document.getElementById("firstName");
+	const lastNameInput = document.getElementById("lastName");
+	const emailInput = document.getElementById("email");
+	const phoneNumberInput = document.getElementById("phoneNumber");
+ 
+	firstNameInput.value = "";
+	lastNameInput.value = "";
+	emailInput.value = "";
+	phoneNumberInput.value = "";
 
-	let tmp = {bean:newBean,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
+ }
 
-	let url = urlBase + '/AddContact.' + extension;
+function addBean(){
+
+	const firstName = document.getElementById("firstName");
+	const lastName = document.getElementById("lastName");
+	const email = document.getElementById("email");
+	const phoneNumber = document.getElementById("phoneNumber");
+	const userID = getUserIdFromCookie();
+
+	if(firstName.checkValidity() && lastName.checkValidity() && email.checkValidity() && phoneNumber.checkValidity()){
+		const requestData = {
+			firstName: firstName.value,
+			lastName: lastName.value,
+			email: email.value,
+			phoneNumber: phoneNumber.value,
+			userID: userID,
+		}
 	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("beanAddResult").innerHTML = "A Bean has been added";
+		fetch(urlBase + '/AddContact.' + extension, {
+			method: 'POST',
+			headers: {
+				'Content-Type':'application/json',
+			},
+			body: JSON.stringify(requestData),
+		})
+		.then(response => {
+			if(!response.ok){
+				throw new Error("Network response was not ok");
 			}
-		};
-		xhr.send(jsonPayload);
+			return response.json();
+		})
+		.then(data => {
+			if(data.success){
+				console.log("Contact added successfully.");
+				clearContactForm();
+				$('#addContactModal').modal('hide');
+				populateContactList(userID);
+			}else{
+				console.error("Error adding contact: ", data.error);
+			}
+		})
+		.catch(error => {
+			console.error("Error fetching data: ", error);
+		})
+	}else{
+		console.error("Form is not valid. Please fill in all required fields.");
+		alert("Please fill in all required (*) fields.");
 	}
-	catch(err)
-	{
-		document.getElementById("beanAddResult").innerHTML = err.message;
-	}
-	
 }
 
 function searchBean()
@@ -297,7 +329,6 @@ function deleteContact(button){
 
 	deleteContactAPI(userId, firstName, lastName, phoneNumber)
 		.then(response => {
-			console.log(response);
 			if(response.success){
 				listItem.remove();
 			}else{
