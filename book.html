@@ -28,7 +28,7 @@
 			<div id="loggedInDiv">
 				<span id="userName"></span><br />
 				<input type="text" id="searchBeans" placeholder="Search for a Bean.">
-				<button type="button" id="searchBeanButton" onclick="clickSearch();">Search</button>
+				<button type="button" id="searchBeanButton" onclick="searchBean();">Search</button>
 			</div>
 
 
@@ -48,16 +48,16 @@
 								<form id="contactForm">
 									<!-- Add form fields here, e.g., First Name, Last Name, Phone, Email -->
 									<label for="firstName">*First Name:</label>
-									<input type="text" id="firstName" name="firstName" required><br>
+									<input type="text" id="firstName" name="firstName" placeholder="First Name" required><br>
 							
 									<label for="lastName">*Last Name:</label>
-									<input type="text" id="lastName" name="lastName" required><br>
+									<input type="text" id="lastName" name="lastName"  placeholder="Last Name" required><br>
 				
 									<label for="email">*Email:</label>
-									<input type="text" id="email" name="email" required><br>
+									<input type="text" id="email" name="email" placeholder="Email"><br>
 				
 									<label for="phoneNumber">*Phone Number:</label>
-									<input type="text" id="phoneNumber" name="phoneNumber" required><br>
+									<input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number"><br>
 							
 									<!-- Add more fields as needed -->
 							
@@ -69,12 +69,47 @@
 					</div>
 				</div>
 			</div>
+
+
+			<!-- Edit Contact Modal -->
+			<div class="modal fade" id="editContactModal" tabindex="-1" role="dialog" aria-labelledby="editContactModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editContactModalLabel">Edit Contact</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<!-- Edit contact form goes here -->
+							<form id="editContactForm">
+								<input type="hidden" class="contact-id" value="123">
+								<label for="firstName">*First Name:</label>
+								<input type="text" id="editFirstName" name="editFirstName" placeholder="First Name" required>
+
+								<label for="lastName">*Last Name:</label>
+								<input type="text" id="editLastName" name="editLastName" placeholder="Last Name" required>
+
+								<label for="email">*Email:</label>
+								<input type="text" id="editEmail" name="editEmail" placeholder="Email">
+
+								<label for="phoneNumber">*Phone Number:</label>
+								<input type="text" id="editPhone" name="editPhone" placeholder="Phone Number">
+								<button type="submit" class="btn btn-primary" onclick="editBeanSubmit()">Save Changes</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			 
 			<div id="contacts">
 				<label>Contacts</label>
 				<ul id="contactList">
 					<!-- Each list item represents a contact -->
 					<li>
+						<input type="hidden" class="contact-id" value="123">
 						<div class="contact-info">
 							<div class="name">
 								<span class="first-name">Firstname</span>
@@ -84,6 +119,7 @@
 							<div class="phone">phonenumber</div>
 						</div>
 						<button class="delete-button" onclick="deleteContact(this)">Delete</button>
+						<button class="edit-button" onclick="editBeanUI()">Edit</button>
 					</li>
 					<!-- Repeat the above structure for each contact -->
 				</ul>

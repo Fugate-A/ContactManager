@@ -1,33 +1,23 @@
 <?php
     $inData = getRequestInfo();
-    
-    
-    $userID = $inData["userID"];
-    $targetProperty = $inData["targetProperty"];
-    $newValue = $inData["newValue"];
+
+    $firstName = $inData["firstName"];
+    $lastName = $inData["lastName"];
+    $phoneNumber = $inData["phoneNumber"];
+    $email = $inData["email"];
+    $contactID = $inData["contactID"];
 
     $conn = new mysqli("localhost", "TheBeast", "SmallGroupProjectCOP4331C", "COP4331");
     if($conn->connect_error){
         returnWithError($conn->connect_error);
     } else {
-        $stmt = $conn->prepare("SELECT UserID FROM Contacts WHERE UserID = ?");
-        $stmt->bind_param("s", $userID);
+        $stmt = $conn->prepare("UPDATE Contacts SET FirstName = ? , LastName = ? , Email = ? , Phone = ? WHERE ID = $contactID");
+        $stmt->bind_param("ssss", $firstName, $lastName, $email, $phoneNumber);
         $stmt->execute();
-        $stmt->store_result();
+        $stmt->close();
+        $conn->close();
     
-        if ($targetProperty === "firstName" || $targetProperty === "lastName" || $targetProperty === "Phone" || $targetProperty === "email") {
-            // Update the property for the specified userID
-            $stmt = $conn->prepare("UPDATE Contacts SET $targetProperty = ? WHERE UserID = ?");
-            $stmt->bind_param("ss", $newValue, $userID);
-            $stmt->execute();
-            $stmt->close();
-            $conn->close();
-
-            returnWithError(ucfirst($targetProperty) . " updated!");
-        }
-        else {
-            returnWithError("Invalid 'targetProperty' value. It should be one of the following:'firstName', 'lastName', 'Phone', or 'email'.");
-        }
+        returnWithSuccess("Contact updated!");
         
     }
 
@@ -48,4 +38,9 @@
         sendResultInfoAsJson( $retValue );
     }
 
-    ?>
+    function returnWithSuccess($message){
+        $retValue = '{"success":true,"message":"' . $message . '"}';
+        sendResultInfoAsJson($retValue);
+    }
+
+?>

@@ -25,7 +25,7 @@
                 $searchResults .= ",";
             }
             $searchCount++;
-            $searchResults .= '{"UserID": "'. $row["UserID"]. '", "FirstName": "'. $row["FirstName"]. '", "LastName": "'. $row["LastName"]. '", "Phone": "'. $row["Phone"]. '", "Email": "'. $row["Email"]. '"}';
+			$searchResults .= '{"ContactID": "'. $row["ID"]. '", "UserID": "'. $row["UserID"]. '", "FirstName": "'. $row["FirstName"]. '", "LastName": "'. $row["LastName"]. '", "Phone": "'. $row["Phone"]. '", "Email": "'. $row["Email"]. '"}';
         }
         
         if( $searchCount == 0 )

@@ -183,7 +183,7 @@ function addBean(){
 	const phoneNumber = document.getElementById("phoneNumber");
 	const userID = getUserIdFromCookie();
 
-	if(firstName.checkValidity() && lastName.checkValidity() && email.checkValidity() && phoneNumber.checkValidity()){
+	if(firstName.checkValidity() && lastName.checkValidity()){
 		const requestData = {
 			firstName: firstName.value,
 			lastName: lastName.value,
@@ -224,54 +224,127 @@ function addBean(){
 	}
 }
 
-function searchBean()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("beanSearchResult").innerHTML = "";
-	
-	let beanList = "";
+function editBeanUI(button){
 
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
+	const firstName = button.parentNode.querySelector(".first-name").textContent;
+	const lastName = button.parentNode.querySelector(".last-name").textContent;
+	const email = button.parentNode.querySelector(".email").textContent;
+	const phoneNumber = button.parentNode.querySelector(".phone").textContent;
 
-	let url = urlBase + '/ContactSearch.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("beanSearchResult").innerHTML = "Bean(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					beanList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						beanList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = beanList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("beanSearchResult").innerHTML = err.message;
-	}
+	const contactID = button.parentNode.querySelector(".contact-id").value;
 
+	document.getElementById("editFirstName").value = firstName;
+	document.getElementById("editLastName").value = lastName;
+	document.getElementById("editEmail").value = email;
+	document.getElementById("editPhone").value = phoneNumber;
+
+	document.getElementsByClassName("contact-id")[0].value = contactID;
+
+	$('#editContactModal').modal('show');
 }
+
+function editBeanSubmit(){
+
+	const firstName = document.getElementById("editFirstName");
+	const lastName = document.getElementById("editLastName");
+	const email = document.getElementById("editEmail");
+	const phoneNumber = document.getElementById("editPhone");
+	const userID = getUserIdFromCookie();
+
+
+	const contactID = document.getElementsByClassName("contact-id")[0].value;
+
+	if(firstName.checkValidity() && lastName.checkValidity()){
+		const requestData = {
+			firstName: firstName.value,
+			lastName: lastName.value,
+			email: email.value,
+			phoneNumber: phoneNumber.value,
+			contactID: contactID,
+		}
+	
+		fetch(urlBase + '/EditContact.' + extension, {
+			method: 'POST',
+			headers: {
+				'Content-Type':'application/json',
+			},
+			body: JSON.stringify(requestData),
+		})
+		.then(response => {
+			if(!response.ok){
+				throw new Error("Network response was not ok");
+			}
+			return response.json();
+		})
+		.then(data => {
+			if(data.success){
+				console.log("Contact edited successfully.");
+				$('#editContactModal').modal('hide');
+				populateContactList(userID);
+			}else{
+				console.error("Error editing contact: ", data.error);
+			}
+		})
+		.catch(error => {
+			console.error("Error fetching data: ", error);
+		})
+	}else{
+		console.error("Form is not valid. Please fill in all required fields.");
+		alert("Please fill in all required (*) fields.");
+	}
+}
+
+function searchBean() {
+    const srch = document.getElementById("searchBeans").value; // Get the input value
+    const userID = getUserIdFromCookie();
+    const contactList = document.getElementById("contactList");
+    contactList.innerHTML = "";
+
+    const requestData = {
+        search: srch,
+        userID: userID,
+    };
+
+    fetch(urlBase + '/ContactSearch.' + extension, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            data.results.forEach(contact => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                <input type="hidden" class="contact-id" value="${contact.ContactID}">
+                <div class="contact-info">
+                    <div class="name">
+                        <span class="first-name">${contact.FirstName}</span>
+                        <span class="last-name">${contact.LastName}</span>
+                    </div>
+                    <div class="email">${contact.Email}</div>
+                    <div class="phone">${contact.Phone}</div>
+                </div>
+                <button class="delete-button" onclick="deleteContact(this)">Delete</button>
+                <button class="edit-button" onclick="editBeanUI(this)">Edit</button>
+            `;
+                contactList.appendChild(listItem);
+            })
+        })
+        .catch(error => {
+            console.error("Error fetching data: ", error);
+        });
+}
+
 
 function populateContactList(userID){
 
-	console.log("Printing contact list for "+userID);
 	const contactList = document.getElementById("contactList");
 
 	contactList.innerHTML = "";
@@ -298,6 +371,7 @@ function populateContactList(userID){
 		data.results.forEach(contact => {
 			const listItem = document.createElement("li");
 			listItem.innerHTML = `
+			<input type="hidden" class="contact-id" value="${contact.ContactID}">
             <div class="contact-info">
                 <div class="name">
                     <span class="first-name">${contact.FirstName}</span>
@@ -307,6 +381,7 @@ function populateContactList(userID){
                 <div class="phone">${contact.Phone}</div>
             </div>
 			<button class="delete-button" onclick="deleteContact(this)">Delete</button>
+			<button class="edit-button" onclick="editBeanUI(this)">Edit</button>
         `;
 			contactList.appendChild(listItem);
 		})
@@ -320,14 +395,9 @@ function populateContactList(userID){
 function deleteContact(button){
 	const listItem = button.parentNode;
 
-	const firstName = listItem.querySelector(".first-name").textContent;
-	const lastName = listItem.querySelector(".last-name").textContent;
-	const phoneNumber = listItem.querySelector(".phone").textContent;
-	const userId = getUserIdFromCookie();
+	const contactID = listItem.querySelector(".contact-id").value;
 
-	console.log(firstName, lastName, phoneNumber, userId);
-
-	deleteContactAPI(userId, firstName, lastName, phoneNumber)
+	deleteContactAPI(contactID)
 		.then(response => {
 			if(response.success){
 				listItem.remove();
@@ -342,14 +412,11 @@ function deleteContact(button){
 
 }
 
-function deleteContactAPI(userID, firstName, lastName, phoneNumber){
+function deleteContactAPI(contactID){
 	const url = urlBase + '/DeleteContact.' + extension;
 
 	const requestData = {
-		firstName: firstName, 
-		lastName: lastName,
-		phoneNumber: phoneNumber,
-		userID, userID,
+		contactID: contactID,
 	};
 
 	return fetch(url, {
