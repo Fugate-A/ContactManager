@@ -139,6 +139,19 @@ function readCookie()
 	}
 }
 
+function getUserIdFromCookie() {
+    
+	const cookies = document.cookie.split(',');
+	for(const cookie of cookies){
+		const [name, value] = cookie.trim().split('=');
+		if(name == 'userId'){
+			return value;
+		}
+	}
+
+	return null;
+}
+
 function doLogout()
 {
 	userId = 0;
@@ -261,6 +274,7 @@ function populateContactList(userID){
                 <div class="email">${contact.Email}</div>
                 <div class="phone">${contact.Phone}</div>
             </div>
+			<button class="delete-button" onclick="deleteContact(this)">Delete</button>
         `;
 			contactList.appendChild(listItem);
 		})
@@ -269,4 +283,53 @@ function populateContactList(userID){
 		console.error("Error fetching data: ", error);
 	});
 	
+}
+
+function deleteContact(button){
+	const listItem = button.parentNode;
+
+	const firstName = listItem.querySelector(".first-name").textContent;
+	const lastName = listItem.querySelector(".last-name").textContent;
+	const phoneNumber = listItem.querySelector(".phone").textContent;
+	const userId = getUserIdFromCookie();
+
+	console.log(firstName, lastName, phoneNumber, userId);
+
+	deleteContactAPI(userId, firstName, lastName, phoneNumber)
+		.then(response => {
+			console.log(response);
+			if(response.success){
+				listItem.remove();
+			}else{
+				alert("Failed to delete contact!!!");
+			}
+		})
+		.catch(error => {
+			console.error("Error deleting contact: ", error);
+			alert("An error has occured while deleting contact.");
+		})
+
+}
+
+function deleteContactAPI(userID, firstName, lastName, phoneNumber){
+	const url = urlBase + '/DeleteContact.' + extension;
+
+	const requestData = {
+		firstName: firstName, 
+		lastName: lastName,
+		phoneNumber: phoneNumber,
+		userID, userID,
+	};
+
+	return fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(requestData),
+	})
+	.then(response => response.json())
+	.catch(error =>{
+		throw new Error(error.message);
+	});
 }
