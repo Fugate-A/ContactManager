@@ -1,17 +1,14 @@
 <?php
 $inData = getRequestInfo();
 
-$firstName = $inData["firstName"];
-$lastName = $inData["lastName"];
-$phoneNumber = $inData["phoneNumber"];
-$userID = $inData["userID"];
+$contactID = $inData["contactID"];
 
 $conn = new mysqli("localhost", "TheBeast", "SmallGroupProjectCOP4331C", "COP4331");
 if ($conn->connect_error) {
     returnWithError($conn->connect_error);
 } else {
-    $stmt = $conn->prepare("DELETE from Contacts WHERE FirstName = ? AND LastName = ? AND Phone = ? AND UserID = ?");
-    $stmt->bind_param("ssss", $firstName, $lastName, $phoneNumber, $userID);
+    $stmt = $conn->prepare("DELETE from Contacts WHERE ID = ?");
+    $stmt->bind_param("s", $contactID);
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
