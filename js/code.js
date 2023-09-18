@@ -17,10 +17,27 @@ function doLogin() {
     let password = passwordInput.value;
 
     if (!login || !password) {
-
         alert("Please fill in all required (*) fields.");
+
+        // Add red outline to empty input fields
+        if (!login) {
+            loginInput.style.border = "1px solid red";
+        } else {
+            loginInput.style.border = "1px solid #ccc"; // Reset border
+        }
+
+        if (!password) {
+            passwordInput.style.border = "1px solid red";
+        } else {
+            passwordInput.style.border = "1px solid #ccc"; // Reset border
+        }
+        
         return;
     }
+
+	// If all required fields are filled, reset the border style
+    loginInput.style.border = "1px solid #ccc";
+    passwordInput.style.border = "1px solid #ccc";
 
 
     let tmp = { login: login, password: password };
@@ -68,19 +85,50 @@ function saveCookie()
 }
 
 function doSignup() {
-    let firstName = document.getElementById("firstName").value;
-    let lastName = document.getElementById("lastName").value;
-    let login = document.getElementById("loginName").value;
-    let password = document.getElementById("loginPassword").value;
+    let firstNameInput = document.getElementById("firstName");
+    let lastNameInput = document.getElementById("lastName");
+    let loginInput = document.getElementById("loginName");
+    let passwordInput = document.getElementById("loginPassword");
+
+    let firstName = firstNameInput.value;
+    let lastName = lastNameInput.value;
+    let login = loginInput.value;
+    let password = passwordInput.value;
+
+    // Check if any of the required fields are empty
+    if (!firstName || !login || !password) {
+        alert("Please fill in all required (*) fields.");
+
+        // Add red outline to empty input fields
+        if (!firstName) {
+            firstNameInput.style.border = "1px solid red";
+        } else {
+            firstNameInput.style.border = "1px solid #ccc"; // Reset border
+        }
+
+        if (!login) {
+            loginInput.style.border = "1px solid red";
+        } else {
+            loginInput.style.border = "1px solid #ccc"; // Reset border
+        }
+
+        if (!password) {
+            passwordInput.style.border = "1px solid red";
+        } else {
+            passwordInput.style.border = "1px solid #ccc"; // Reset border
+        }
+
+        return;
+    }
+
+    // If all required fields are filled, reset the border style
+    firstNameInput.style.border = "1px solid #ccc";
+    loginInput.style.border = "1px solid #ccc";
+    passwordInput.style.border = "1px solid #ccc";
 
     let tmp = { firstName: firstName, lastName: lastName, login: login, password: password };
     let jsonPayload = JSON.stringify(tmp);
     let url = urlBase + '/AddUser.' + extension;
-
-	if(!firstName || !login || !password){
-		alert("Please fill in all required (*) fields.");
-        return;
-	}
 
     fetch(url, {
         method: 'POST',
@@ -90,22 +138,20 @@ function doSignup() {
         body: jsonPayload
     })
     .then(response => {
-
-		if (response.status === 200) {
-			// Redirect to index.html with a query parameter
-		window.location.href = "index.html?signup=true";
-		} else if (response.status === 409) {
-			// Username is already taken (HTTP status code 409 Conflict)
-			alert("Username is already taken. Please choose a different username.");
-		} else {
-			throw new Error('User creation failed');
-		}
-	})
+        if (response.status === 200) {
+            // Redirect to index.html with a query parameter
+            window.location.href = "index.html?signup=true";
+        } else if (response.status === 409) {
+            // Username is already taken (HTTP status code 409 Conflict)
+            alert("Username is already taken. Please choose a different username.");
+        } else {
+            throw new Error('User creation failed');
+        }
+    })
     .catch(error => {
         document.getElementById("loginResult").innerHTML = error.message;
     });
 }
-
 
 
 function readCookie(){
@@ -178,20 +224,20 @@ function clearContactForm() {
  }
 
  function addBean() {
-    const firstName = document.getElementById("firstName");
-    const lastName = document.getElementById("lastName");
-    const email = document.getElementById("email");
-    const phoneNumber = document.getElementById("phoneNumber");
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput = document.getElementById("lastName");
+    const emailInput = document.getElementById("email");
+    const phoneNumberInput = document.getElementById("phoneNumber");
     const userID = getUserIdFromCookie();
 
     console.log(userID);
 
-    if (firstName.checkValidity() && lastName.checkValidity()) {
+    if (firstNameInput.checkValidity() && lastNameInput.checkValidity()) {
         const requestData = {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            email: email.value,
-            phoneNumber: phoneNumber.value,
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            email: emailInput.value,
+            phoneNumber: phoneNumberInput.value,
             userID: userID,
         };
 
@@ -224,8 +270,22 @@ function clearContactForm() {
     } else {
         console.error("Form is not valid. Please fill in all required fields.");
         alert("Please fill in all required (*) fields.");
+
+        // Add red outline to empty input fields
+        if (!firstNameInput.checkValidity()) {
+            firstNameInput.style.border = "1px solid red";
+        } else {
+            firstNameInput.style.border = "1px solid #ccc"; // Reset border
+        }
+
+        if (!lastNameInput.checkValidity()) {
+            lastNameInput.style.border = "1px solid red";
+        } else {
+            lastNameInput.style.border = "1px solid #ccc"; // Reset border
+        }
     }
 }
+
 
 
 function editBeanUI(button){
@@ -247,56 +307,67 @@ function editBeanUI(button){
 	$('#editContactModal').modal('show');
 }
 
-function editBeanSubmit(){
+function editBeanSubmit() {
+    const firstNameInput = document.getElementById("editFirstName");
+    const lastNameInput = document.getElementById("editLastName");
+    const emailInput = document.getElementById("editEmail");
+    const phoneNumberInput = document.getElementById("editPhone");
+    const userID = getUserIdFromCookie();
+    const contactID = document.getElementsByClassName("contact-id")[0].value;
 
-	const firstName = document.getElementById("editFirstName");
-	const lastName = document.getElementById("editLastName");
-	const email = document.getElementById("editEmail");
-	const phoneNumber = document.getElementById("editPhone");
-	const userID = getUserIdFromCookie();
+    if (firstNameInput.checkValidity() && lastNameInput.checkValidity()) {
+        const requestData = {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            email: emailInput.value,
+            phoneNumber: phoneNumberInput.value,
+            contactID: contactID,
+        };
 
+        fetch(urlBase + '/EditContact.' + extension, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log("Contact edited successfully.");
+                    $('#editContactModal').modal('hide');
+                    populateContactList(userID);
+                } else {
+                    console.error("Error editing contact: ", data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching data: ", error);
+            });
+    } else {
+        console.error("Form is not valid. Please fill in all required fields.");
+        alert("Please fill in all required (*) fields.");
 
-	const contactID = document.getElementsByClassName("contact-id")[0].value;
+        // Add red outline to empty input fields
+        if (!firstNameInput.checkValidity()) {
+            firstNameInput.style.border = "1px solid red";
+        } else {
+            firstNameInput.style.border = "1px solid #ccc"; // Reset border
+        }
 
-	if(firstName.checkValidity() && lastName.checkValidity()){
-		const requestData = {
-			firstName: firstName.value,
-			lastName: lastName.value,
-			email: email.value,
-			phoneNumber: phoneNumber.value,
-			contactID: contactID,
-		}
-	
-		fetch(urlBase + '/EditContact.' + extension, {
-			method: 'POST',
-			headers: {
-				'Content-Type':'application/json',
-			},
-			body: JSON.stringify(requestData),
-		})
-		.then(response => {
-			if(!response.ok){
-				throw new Error("Network response was not ok");
-			}
-			return response.json();
-		})
-		.then(data => {
-			if(data.success){
-				console.log("Contact edited successfully.");
-				$('#editContactModal').modal('hide');
-				populateContactList(userID);
-			}else{
-				console.error("Error editing contact: ", data.error);
-			}
-		})
-		.catch(error => {
-			console.error("Error fetching data: ", error);
-		})
-	}else{
-		console.error("Form is not valid. Please fill in all required fields.");
-		alert("Please fill in all required (*) fields.");
-	}
+        if (!lastNameInput.checkValidity()) {
+            lastNameInput.style.border = "1px solid red";
+        } else {
+            lastNameInput.style.border = "1px solid #ccc"; // Reset border
+        }
+    }
 }
+
 
 function searchBean() {
     const srch = document.getElementById("searchBeans").value; // Get the input value
