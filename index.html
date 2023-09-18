@@ -45,9 +45,30 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Password*</label>
-                            <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+                            <div class="mb-3 position-relative">
+                                <label for="loginPassword" class="form-label">Password *</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder="Password">
+                                    <button type="button" id="togglePassword" class="btn btn-coffee position-absolute end-0 top-50 translate-middle-y">Show</button>
+                                </div>
+                            </div>
+                        
+                            <script>
+                                const togglePasswordButton = document.getElementById("togglePassword");
+                                const passwordInput = document.getElementById("loginPassword");
+                        
+                                togglePasswordButton.addEventListener("click", function () {
+                                    if (passwordInput.type === "password") {
+                                        passwordInput.type = "text";
+                                        togglePasswordButton.textContent = "Hide";
+                                    } else {
+                                        passwordInput.type = "password";
+                                        togglePasswordButton.textContent = "Show";
+                                    }
+                                });
+                            </script>
                         </div>
+ 
 
                         <button type="button" class="btn btn-coffee btn-block" onclick="doLogin();">Login</button>
                         

@@ -90,13 +90,17 @@ function doSignup() {
         body: jsonPayload
     })
     .then(response => {
-        if (response.status === 200) {
-            // Redirect to index.html with a query parameter
-            window.location.href = "index.html?signup=true";
-        } else {
-            throw new Error('User creation failed');
-        }
-    })
+
+		if (response.status === 200) {
+			// Redirect to index.html with a query parameter
+		window.location.href = "index.html?signup=true";
+		} else if (response.status === 409) {
+			// Username is already taken (HTTP status code 409 Conflict)
+			alert("Username is already taken. Please choose a different username.");
+		} else {
+			throw new Error('User creation failed');
+		}
+	})
     .catch(error => {
         document.getElementById("loginResult").innerHTML = error.message;
     });

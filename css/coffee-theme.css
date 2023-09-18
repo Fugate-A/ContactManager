@@ -48,6 +48,18 @@
     color: #fff; /* White text on coffee bean button */
 }
 
+#togglePassword {
+    background: transparent; /* Set the background to transparent */
+    color: #47321c; /* Set the text color to coffee color */
+    border: none; /* Remove the button border */
+    outline: none; /* Remove the outline when focused */
+    cursor: pointer; /* Add a pointer cursor on hover */
+}
+
+#togglePassword:hover {
+    color: rgb(61, 42, 23); /* Darker coffee bean button background on hover */
+    font-size: 110%;
+}
 
 #login-title {
     font-family: 'Pacifico', cursive; /* Use the 'Pacifico' Google Font for a decorative title font */
