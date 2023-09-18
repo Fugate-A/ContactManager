@@ -56,6 +56,8 @@ function doLogin() {
                     userId = jsonObject.id;
 
                     if (userId < 1) {
+						loginInput.style.border = "1px solid red";
+						passwordInput.style.border = "1px solid red";
                         alert("Username or password is incorrect.");
                         return;
                     }
@@ -143,6 +145,7 @@ function doSignup() {
             window.location.href = "index.html?signup=true";
         } else if (response.status === 409) {
             // Username is already taken (HTTP status code 409 Conflict)
+			loginInput.style.border = "1px solid red";
             alert("Username is already taken. Please choose a different username.");
         } else {
             throw new Error('User creation failed');
