@@ -5,57 +5,59 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
-function doLogin()
-{
-	userId = 0;
-	firstName = "";
-	lastName = "";
-	
-	let login = document.getElementById("loginName").value;
-	let password = document.getElementById("loginPassword").value;
-//	var hash = md5( password );
-	
-	let tmp = {login:login,password:password};
-//	var tmp = {login:login,password:hash};
-	let jsonPayload = JSON.stringify( tmp );
-	
-	let url = urlBase + '/Login.' + extension;
+function doLogin() {
+    userId = 0;
+    firstName = "";
+    lastName = "";
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse( xhr.responseText );
-				userId = jsonObject.id;
-		
-				if( userId < 1 )
-				{		
-					document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
-					return;
-				}
-		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
+    let loginInput = document.getElementById("loginName");
+    let passwordInput = document.getElementById("loginPassword");
 
-				saveCookie();
-				
-				window.location.href = "book.html";
-				
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("loginResult").innerHTML = err.message;
-	}
+    let login = loginInput.value;
+    let password = passwordInput.value;
 
+    if (!login || !password) {
+
+        alert("Please fill in all required (*) fields.");
+        return;
+    }
+
+
+    let tmp = { login: login, password: password };
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/Login.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    let jsonObject = JSON.parse(xhr.responseText);
+                    userId = jsonObject.id;
+
+                    if (userId < 1) {
+                        alert("Username or password is incorrect.");
+                        return;
+                    }
+
+                    firstName = jsonObject.firstName;
+                    lastName = jsonObject.lastName;
+
+                    saveCookie();
+
+                    window.location.href = "book.html";
+                }
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        document.getElementById("loginResult").innerHTML = err.message;
+    }
 }
+
 
 function saveCookie()
 {
@@ -74,6 +76,11 @@ function doSignup() {
     let tmp = { firstName: firstName, lastName: lastName, login: login, password: password };
     let jsonPayload = JSON.stringify(tmp);
     let url = urlBase + '/AddUser.' + extension;
+
+	if(!firstName || !login || !password){
+		alert("Please fill in all required (*) fields.");
+        return;
+	}
 
     fetch(url, {
         method: 'POST',
@@ -166,54 +173,56 @@ function clearContactForm() {
 
  }
 
-function addBean(){
+ function addBean() {
+    const firstName = document.getElementById("firstName");
+    const lastName = document.getElementById("lastName");
+    const email = document.getElementById("email");
+    const phoneNumber = document.getElementById("phoneNumber");
+    const userID = getUserIdFromCookie();
 
-	const firstName = document.getElementById("firstName");
-	const lastName = document.getElementById("lastName");
-	const email = document.getElementById("email");
-	const phoneNumber = document.getElementById("phoneNumber");
-	const userID = getUserIdFromCookie();
+    console.log(userID);
 
-	if(firstName.checkValidity() && lastName.checkValidity()){
-		const requestData = {
-			firstName: firstName.value,
-			lastName: lastName.value,
-			email: email.value,
-			phoneNumber: phoneNumber.value,
-			userID: userID,
-		}
-	
-		fetch(urlBase + '/AddContact.' + extension, {
-			method: 'POST',
-			headers: {
-				'Content-Type':'application/json',
-			},
-			body: JSON.stringify(requestData),
-		})
-		.then(response => {
-			if(!response.ok){
-				throw new Error("Network response was not ok");
-			}
-			return response.json();
-		})
-		.then(data => {
-			if(data.success){
-				console.log("Contact added successfully.");
-				clearContactForm();
-				$('#addContactModal').modal('hide');
-				populateContactList(userID);
-			}else{
-				console.error("Error adding contact: ", data.error);
-			}
-		})
-		.catch(error => {
-			console.error("Error fetching data: ", error);
-		})
-	}else{
-		console.error("Form is not valid. Please fill in all required fields.");
-		alert("Please fill in all required (*) fields.");
-	}
+    if (firstName.checkValidity() && lastName.checkValidity()) {
+        const requestData = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            email: email.value,
+            phoneNumber: phoneNumber.value,
+            userID: userID,
+        };
+
+        fetch(urlBase + '/AddContact.' + extension, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log("Contact added successfully.");
+                    clearContactForm();
+                    $('#addContactModal').modal('hide');
+                    populateContactList(userID);
+                } else {
+                    console.error("Error adding contact: ", data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching data: ", error);
+            });
+    } else {
+        console.error("Form is not valid. Please fill in all required fields.");
+        alert("Please fill in all required (*) fields.");
+    }
 }
+
 
 function editBeanUI(button){
 
@@ -310,24 +319,46 @@ function searchBean() {
             return response.json();
         })
         .then(data => {
-            data.results.forEach(contact => {
-                const listItem = document.createElement("li");
-                listItem.innerHTML = `
-                <input type="hidden" class="contact-id" value="${contact.ContactID}">
-                <div class="contact-info">
-                    <div class="name">
-                        <span class="first-name">${contact.FirstName}</span>
-                        <span class="last-name">${contact.LastName}</span>
-                    </div>
-                    <div class="email">${contact.Email}</div>
-                    <div class="phone">${contact.Phone}</div>
-                </div>
-                <button class="delete-button" onclick="deleteContact(this)">Delete</button>
-                <button class="edit-button" onclick="editBeanUI(this)">Edit</button>
-            `;
-                contactList.appendChild(listItem);
-            })
-        })
+
+			if(data && data.results){
+	
+				data.results.forEach(contact => {
+					const listItem = document.createElement("li");
+					listItem.innerHTML = `
+					<input type="hidden" class="contact-id" value="${contact.ContactID}">
+					<div class="contact-item">
+						<div class="contact-image">
+							<img src="/images/bean.png" alt="Contact Image">
+						</div>
+						<div class="contact-info">
+							<div class="name">
+								<span class="first-name">${contact.FirstName}</span>
+								<span class="last-name">${contact.LastName}</span>
+							</div>
+							<div class="info">
+								<span class="email">${contact.Email}</span>
+								<span class="phone">${contact.Phone}</span>
+							</div>
+						</div>
+					</div>
+					<button class="delete-button" onclick="deleteContact(this)">
+						<i class="fas fa-trash"></i> Delete
+					</button>
+					<button class="edit-button" onclick="editBeanUI(this)">
+						<i class="fas fa-edit"></i> Edit
+					</button>
+				</li>
+				`;
+					contactList.appendChild(listItem);
+				})	
+			} else {
+				// Display "No contacts" message when data is undefined
+				const noContactsMessage = document.createElement("li");
+                noContactsMessage.textContent = "No Beans";
+                noContactsMessage.classList.add("no-contacts");
+                contactList.appendChild(noContactsMessage);
+			}
+		})
         .catch(error => {
             console.error("Error fetching data: ", error);
         });
@@ -358,24 +389,45 @@ function populateContactList(userID){
 		return response.json();
 	})
 	.then(data => {
-   
-		data.results.forEach(contact => {
-			const listItem = document.createElement("li");
-			listItem.innerHTML = `
-			<input type="hidden" class="contact-id" value="${contact.ContactID}">
-            <div class="contact-info">
-                <div class="name">
-                    <span class="first-name">${contact.FirstName}</span>
-                    <span class="last-name">${contact.LastName}</span>
-                </div>
-                <div class="email">${contact.Email}</div>
-                <div class="phone">${contact.Phone}</div>
-            </div>
-			<button class="delete-button" onclick="deleteContact(this)">Delete</button>
-			<button class="edit-button" onclick="editBeanUI(this)">Edit</button>
-        `;
-			contactList.appendChild(listItem);
-		})
+
+		if(data && data.results){
+
+			data.results.forEach(contact => {
+				const listItem = document.createElement("li");
+				listItem.innerHTML = `
+				<input type="hidden" class="contact-id" value="${contact.ContactID}">
+				<div class="contact-item">
+					<div class="contact-image">
+						<img src="/images/bean.png" alt="Contact Image">
+					</div>
+					<div class="contact-info">
+						<div class="name">
+							<span class="first-name">${contact.FirstName}</span>
+							<span class="last-name">${contact.LastName}</span>
+						</div>
+						<div class="info">
+							<span class="email">${contact.Email}</span>
+							<span class="phone">${contact.Phone}</span>
+						</div>
+					</div>
+				</div>
+				<button class="delete-button" onclick="deleteContact(this)">
+					<i class="fas fa-trash"></i> Delete
+				</button>
+				<button class="edit-button" onclick="editBeanUI(this)">
+					<i class="fas fa-edit"></i> Edit
+				</button>
+			</li>
+			`;
+				contactList.appendChild(listItem);
+			})	
+		} else {
+			// Display "No contacts" message when data is undefined
+			const noContactsMessage = document.createElement("li");
+			noContactsMessage.textContent = "No Beans";
+			noContactsMessage.classList.add("no-contacts");
+			contactList.appendChild(noContactsMessage);
+		}
 	})
 	.catch(error => {
 		console.error("Error fetching data: ", error);
@@ -383,25 +435,31 @@ function populateContactList(userID){
 	
 }
 
-function deleteContact(button){
-	const listItem = button.parentNode;
+function deleteContact(button) {
+    const listItem = button.parentNode;
+    const contactID = listItem.querySelector(".contact-id").value;
 
-	const contactID = listItem.querySelector(".contact-id").value;
+    // Show a confirmation dialog
+    const confirmation = confirm("Are you sure you want to delete this bean?");
 
-	deleteContactAPI(contactID)
-		.then(response => {
-			if(response.success){
-				listItem.remove();
-			}else{
-				alert("Failed to delete contact!!!");
-			}
-		})
-		.catch(error => {
-			console.error("Error deleting contact: ", error);
-			alert("An error has occured while deleting contact.");
-		})
-
+    if (confirmation) {
+        // User confirmed the deletion
+        deleteContactAPI(contactID)
+            .then(response => {
+                if (response.success) {
+                    listItem.remove();
+					populateContactList(getUserIdFromCookie());
+                } else {
+                    alert("Failed to delete contact!!!");
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting contact: ", error);
+                alert("An error has occurred while deleting contact.");
+            });
+    }
 }
+
 
 function deleteContactAPI(contactID){
 	const url = urlBase + '/DeleteContact.' + extension;

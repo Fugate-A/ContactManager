@@ -1,0 +1,172 @@
+/* Custom Coffee Theme CSS */
+
+.coffee-card {
+    background-color: #fff1e5; /* Coffee color background */
+    border: 3px solid #7a5e42; /* Coffee bean border */
+
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack child elements vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    text-align: center; /* Center text */
+
+
+}
+
+.coffee-card::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 50px; /* Adjust the height as needed */
+    background-image: url("../images/bottom-border.png"); /* Replace with your image path */
+    background-repeat: repeat-x; /* Repeat the image horizontally */
+    background-size: contain; /* Adjust the size as needed */
+    background-position: center bottom; /* Position the image at the bottom center */
+}
+
+#coffee-card input[type="text"], #coffee-card input[type="password"] {
+    width: 50%; /* Set the width to 100% to span the container */
+    padding: 10px; /* Add some padding for spacing */
+    margin: 10px 0; /* Add margin to space them vertically */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+#logoutButton{
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-left: auto;
+}
+
+.btn-coffee {
+    background-color: #7a5e42; /* Coffee bean button background */
+    color: #fff; /* White text on coffee bean button */
+    border: none;
+}
+
+.btn-coffee:hover {
+    background-color: #6c5138; /* Darker coffee bean button background on hover */
+    color: #fff; /* White text on coffee bean button */
+}
+
+
+#login-title {
+    font-family: 'Pacifico', cursive; /* Use the 'Pacifico' Google Font for a decorative title font */
+    font-size: 2.5rem; /* Increase the font size for emphasis */
+    color: #47321c; /* Coffee bean color for the title */
+    text-align: center; /* Center the title text */
+}
+
+#login-title-container {
+    background-image: url('../images/wood-background.jpg');
+    /* Additional background properties */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    border-radius: 5px;
+    border: 3px solid #7a5e42; 
+
+    margin-bottom: -20px;
+}
+
+.modal-content {
+    background-color: #fff1e5; /* Coffee-themed background color */
+    border: 3px solid #7a5e42; /* Coffee bean border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+    text-align: center;
+}
+
+/* Style the modal header */
+.modal-header {
+    background-image: url('../images/wood-background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Style the modal title */
+.modal-title {
+
+    color: #47321c;
+    font-family: 'Pacifico', cursive; /* Decorative title font */
+    font-size: 2.5rem;
+}
+
+/* Style the modal body content */
+.modal-body {
+    font-size: large;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+}
+
+/* Style individual elements within the modal body */
+.modal-body label {
+    font-weight: bold; /* Make labels bold */
+}
+
+.modal-body .form-group {
+    margin-bottom: 20px; /* Add spacing between form groups */
+}
+
+/* Center-align text within form groups */
+.modal-body .form-group input[type="text"],
+.modal-body .form-group input[type="email"],
+.modal-body .form-group input[type="tel"] {
+    text-align: center;
+    width: 100%; /* Expand input fields to full width */
+}
+
+/* Style buttons within the modal body */
+.modal-body .btn {
+    background-color: #7a5e42;
+    color: #fff;
+    margin-right: 10px; /* Add spacing between buttons */
+}
+
+/* Add hover effect to buttons */
+.modal-body .btn:hover {
+    background-color: #6c5138;
+}
+
+#editContactModal .edit-bean-button {
+    text-align: center;
+    margin: 0 auto; /* Center horizontally within the modal */
+    display: block; /* Ensure it takes up the full width available */
+}
+
+/* Style the entire toast */
+.coffee-toast {
+    background-color: #ffeecc; /* Change this to your desired background color */
+    border: 1px solid #ffeecc;
+    color: #884422; /* Change this to your desired text color */
+}
+
+/* Style the close button */
+.coffee-toast .btn-close {
+    color: #884422; /* Change this to your desired close button color */
+}
+
+/* Style the toast header */
+.coffee-toast .toast-header {
+    padding: 0.2rem 0.5rem; /* Adjust the padding to make the header thin */
+}
+
+/* Style the toast body */
+.coffee-toast .toast-body {
+    font-size: large;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+    font-weight: bold; /* Example style */
+}
+
+
+.toast {
+    position: absolute;
+    top: 10px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+    background-color: #ffeecc; /* Change this to your desired background color */
+    border: 1px solid #ffeecc;
+    color: #884422; /* Change this to your desired text color */
+}

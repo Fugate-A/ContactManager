@@ -2,7 +2,6 @@ body
 {
     background-image: url("../images/background.jpg");
     background-color: #cccccc; /* Used if the image is unavailable */
-    height: 800px; /* You must set a specified height */
     background-position: center; /* Center the image */
     background-repeat: no-repeat; 
     background-size:auto;
@@ -12,20 +11,7 @@ body
     align-items: center;
     justify-content: center;
 
-   
-}
-
-.displayArea{
-    background-color: #765640;
-    width: 70%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: lime;
-
-    margin: 0 auto;
+   padding: 10px;
 }
 
 #title 
@@ -38,188 +24,121 @@ body
     color: #FFFFFF;
 }
 
-#loginDiv
-{
-    font-size: 30px;
-    width: 45%;
-    padding: 25px;
-    background-color: #765640;
-}
-
-#loggedInDiv
+#greetingDiv
 {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
+    width: 90%;
     font-size: 30px;
-    width: 70%;
     padding: 25px;
+}
 
-    border: lime solid;
+.card-body{
+    width: 100%;
 }
 
 #contacts{
-    width: 50%;
+    width: 80%;
     margin: 0 auto;
+    margin-bottom: 5px;
     padding: 20px;
     border: 1px solid #ccc;
+
+    background-color: rgb(247, 237, 220);
+
+    overflow-y: auto;
 }
 
-#contactList{
-    list-style-position: inside;
+.no-contacts {
+    text-align: center;
+    margin-left: 45%;
+    font-style: italic;
+    font-size: 1.5rem; /* Adjust the font size as needed */
+    margin-top: 20px; /* Adjust the top margin for centering */
 }
 
-#contactList li{
+
+#contacts ul{
+    list-style: none;
+}
+
+#contacts-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+#contacts-header h3{
+    margin-left: 45%;
+}
+
+.contact-item {
+    display: flex; /* Use flexbox to arrange contact image and info horizontally */
+    align-items: center; /* Center vertically within the contact-item */
+    width: 100%; /* Expand contact-item to full width */
+}
+
+#contactList {
+    padding-left: 0; /* Remove default padding for list */
+}
+
+#contactList li {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid #ccc; /* Add a light gray border at the bottom */
+    padding: 10px 0; /* Add some spacing between items */
+}
+
+#contactList li:last-child {
+    border-bottom: none; /* Remove border from the last item to avoid an extra line */
+}
+
+.contact-image{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.contact-image img {
+    max-width: 50px; /* Adjust the value to your preferred maximum width */
+    max-height: 50px; /* Adjust the value to your preferred maximum height */
 }
 
 .contact-info{
-    border: black solid;
+    margin-left: 40px;
+    flex-grow: 1;
+    font-size: large;
 }
 
-#contactList li::before {
-    content: '\2022'; /* Unicode bullet character */
-    margin-right: 10px; /* Adjust the spacing between the bullet and text */
-    font-size: 18px; /* Adjust the bullet size as needed */
+.info {
+    display: flex;
+    flex-direction: column; /* Stack email and phone vertically */
 }
 
-#accessUIDiv
-{
-    font-size: 30px;
-    width: 70%;
-    margin-left: 15%;
-    padding: 25px;
-    background-color: #765640;
+.email,
+.phone {
+    margin: 0.2em 0; /* Add some spacing between email and phone */
 }
 
-.buttons
-{
-    font-size: 30px;
-    border-radius: 25px;
-    width: 40%;
-    margin-left: 30%;
-    font-family: 'Bookman', sans-serif;
+#editContactForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.switchButton
-{
-   font-size:30px;
-   border-radius: 25px;
-   width:70%;
-   padding:25px;
-   font-family:'Bookman',sans-serif;
-   float:left;
+#contactForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.switchButton:after
-{
-  content:"";
-  clear:both;
-  display:none;
-}
-
-.switchButton button:not(:last-child)
-{
-   border-right:none;
-}
-
-.buttons:hover{
-    background-color: #4a2c2a;
-    color: #FFFFFF;
-    opacity: 50%;
-}
-
-#loginName
-{
-	font-size: 30px;
-}
-#loginPassword
-{
-	font-size: 30px;
-}
-#searchText
-{
-	font-size: 30px;
-}
-#colorText
-{
-	font-size: 30px;
-}
-
-input[type="text"],input[type="password"]{
-    border-radius: 25px;
-    text-align: center;
-    width: 40%;
-    margin-left: 30%;
-    margin-bottom: 2%;
-    font-family: 'Bookman', sans-serif;
-}
-
-#inner-title{
-    display: inline-block;
-    font-size: 1em;
-    width: 90%;
-    text-align: center;
-    margin-left: 5%;
-    margin-bottom: 2%;
-    font-family: 'Bookman', sans-serif;
-    color: #efc3a4;
-}
-
-#loginResult{
-    display: inline-block;
-    font-size: 0.8em;
-    width: 90%;
-    text-align: center;
-    margin-left: 5%;
-    margin-bottom: 2%;
-    font-family: 'Bookman', sans-serif;
-    color: #95060a;
-}
-
-#userName{
-    display: inline-block;
-    width: 80%;
-    margin-left: 10%;
-    text-align: center;
-}
-
-#logoutButton{
-    width: 20%;
-    margin-left: 40%;
-}
-
-select{
-    width: 30%;
-    margin-left: 35%;
-    margin-top: 2%;
-    font-size: 0.75em;
-    font-family: 'Bookman', sans-serif;
-}
-
-
-/*Everything below here is used by color.html and is unused ATM
-* index.html is the homepage for Bean Book, currently only includes a login function
-* color.html will be replaced by book.html for a logged in user
-* need to develop the JS for book
-*/
-
-#colorSearchResult{
-    display: none;
-}
-
-#colorAddResult{
-    display: inline-block;
-    font-size: 0.8em;
-    width: 90%;
-    text-align: center;
-    margin-left: 5%;
-    margin-top: 2%;
-    margin-bottom: 1%;
-    font-family: 'Bookman', sans-serif;
-    color: #95060a;
+.form-label{
+    font-size: 20px;
 }
